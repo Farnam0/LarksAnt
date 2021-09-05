@@ -56,6 +56,8 @@ function setup() // P5 Setup Fcn, must be called for Anim to work.
 var g_bot = { dir:3, x:20, y:20, color:100 }; // Dir is 0..7 clock, w 0 up.
 var g_box = { t:1, hgt:47, l:1, wid:63 }; // Box in which bot can move.
 
+var firstRun = false;
+
 function move_bot( ) // Move the bot in new direction & update color.
 {
     let dir = (round (8 * random( ))) // Change direction at random; brownian motion.
@@ -73,14 +75,23 @@ function move_bot( ) // Move the bot in new direction & update color.
         case 6 : { dx = -1; break; }
         case 7 : { dx = -1; dy = -1; break; }
     }
+
     let x = (dx + g_bot.x + g_box.wid) % g_box.wid; // Move-x.  Ensure positive b4 mod.
     let y = (dy + g_bot.y + g_box.hgt) % g_box.hgt; // Ditto y.
+
+    if(!firstRun) //Always start with specific location
+    {
+        x = 30;
+        y = 20;
+        firstRun = true;
+    }
+
     let color =  100 + (1 + g_bot.color) % 156; // Incr color in nice range.
     g_bot.x = x; // Update bot x.
     g_bot.y = y;
     g_bot.dir = dir;
     g_bot.color = color;
-    //console.log( "bot x,y,dir,clr = " + x + "," + y + "," + dir + "," +  color );
+    console.log( "bot x,y,dir,clr = " + x + "," + y + "," + dir + "," +  color );
 }
 
 function get_rgb( cpix ) // Get RGB integer color at canvas pixel pos.
