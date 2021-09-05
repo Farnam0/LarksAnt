@@ -26,13 +26,20 @@
 
 const Colors =
 {
-    black: '#222222',
-    blue: '#326ad1',
-    yellow: '#f5e20f',
-    red: '#eb152a'
+    Black: '#222222',
+    Blue: '#326ad1',
+    Yellow: '#f5e20f',
+    Red: '#eb152a'
 }
 
-var g_canvas = { cell_size:10, wid:64, hgt:48 }; // JS Global var, w canvas size info.
+const Actions =
+{
+    TurnLeft: 0,
+    TurnRight: 1,
+    StraightCountDown: 2
+}
+
+var g_canvas = { cell_size:10, wid:60, hgt:40 }; // JS Global var, w canvas size info.
 var g_frame_cnt = 0; // Setup a P5 display-frame counter, to do anim
 var g_frame_mod = 24; // Update ever 'mod' frames.
 var g_stop = 0; // Go by default.
