@@ -24,9 +24,14 @@
 // Make our own global, g_canvas, JS 'object': a key-value 'dictionary'.
   // (Our g_canvas is just a suitcase - the P5 canvas has the pixels, themselves.)
 
+  const Mode = {
+      Normal : 0,
+      CountDown : 1
+  }
+
   const Colors =
   {
-      Black: '#222222', //0
+      Black: '#000000', //0
       Blue: '#326ad1',  //1
       Yellow: '#f5e20f',//2
       Red: '#eb152a'    //3 -> Back to 0
@@ -36,8 +41,138 @@
   {
       TurnLeft: 0,
       TurnRight: 1,
-      StraightCountdown: 2
   }
+
+  const Cardinal = 
+  {
+      North : 0,
+      South : 1,
+      West : 2,
+      East : 3
+  }
+
+  var g_bot = { x:30, y:20, color: Colors.Black, cDirection : Cardinal.North }; // Dir is 0..7 clock, w 0 up.
+
+class FSM{
+    constructor() {
+        this.mode = Mode.Normal;
+        this.counter = 0;
+        this.direction = Actions.TurnLeft;
+    }
+
+    MoveBot()
+    {
+       console.log( "Mode->" + this.mode + " Counter->" + this.counter + " Direction->" + this.direction + " Cardinal->" + g_bot.cDirection);
+
+        if(this.mode == Mode.Normal)
+            this.ColorMap();
+        else{
+            this.counter--;
+            if(this.counter < 0)
+                this.mode = Mode.Normal;
+        }
+        
+        let dx = 0;
+        let dy = 0;
+        // A simple way to change bot direction, with a "compass direction ptr".
+
+        // switch(g_bot.cDirection)
+        // {
+        //     case Cardinal.North:  
+        //         switch (this.direction)
+        //         { // Convert dir to x,y deltas: dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
+        //             case Actions.TurnLeft : {  dx = -1; g_bot.cDirection = Cardinal.West; break; } // left, W //dx = -1 is up //dx = 1 is right // dy = 1 is up // dy = -1 is up
+        //             case Actions.TurnRight : { dx = 1; g_bot.cDirection = Cardinal.East; break; } // right, E.
+        //         }
+        //     break;
+        //     case Cardinal.South: 
+        //         switch (this.direction)
+        //         { // Convert dir to x,y deltas: dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
+        //             case Actions.TurnLeft : {  dx = 1; g_bot.cDirection = Cardinal.West; break; } // left, W
+        //             case Actions.TurnRight : { dx = -1; g_bot.cDirection = Cardinal.East; break; } // right, E.
+        //         }
+        //     break;
+        //     case Cardinal.West: 
+        //         switch (this.direction)
+        //         { // Convert dir to x,y deltas : dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
+        //             case Actions.TurnLeft : {  dy = -1; g_bot.cDirection = Cardinal.South; break; } // left, W
+        //             case Actions.TurnRight : { dy = 1; g_bot.cDirection = Cardinal.North; break; } // right, E.
+        //         }
+        //     break;
+        //     case Cardinal.East:
+        //         switch (this.direction)
+        //         { // Convert dir to x,y deltas: dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
+        //             case Actions.TurnLeft : {  dy = 1; g_bot.cDirection = Cardinal.North; break; } // left, W
+        //             case Actions.TurnRight : { dy = -1; g_bot.cDirection = Cardinal.South; break; } // right, E.
+        //         } 
+        //     break;
+        // }
+
+        switch (this.direction)
+        { // Convert dir to x,y deltas: dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
+            case Actions.TurnLeft : {  dx = -1; g_bot.cDirection = Cardinal.West; break; } // left, W //dx = -1 is up //dx = 1 is right // dy = 1 is up // dy = -1 is up
+            case Actions.TurnRight : { dx = 1; g_bot.cDirection = Cardinal.East; break; } // right, E.
+        }
+    
+        let x = (dx + g_bot.x + g_box.wid) % g_box.wid; // Move-x.  Ensure positive b4 mod.
+        let y = (dy + g_bot.y + g_box.hgt) % g_box.hgt; // Ditto y.
+    
+        console.log("g_bot.x->" + g_bot.x + " g_bot.y->" + g_bot.y);
+
+        g_bot.x = x; // Update bot x.
+        g_bot.y = y;
+    
+        console.log("dx->" + dx + " dy->" + dy);
+        console.log("g_bot.x->" + g_bot.x + " g_bot.y->" + g_bot.y);
+
+       console.log( "Mode->" + this.mode + " Counter->" + this.counter + " Direction->" + this.direction + " Cardinal->" + g_bot.cDirection);
+    }
+
+    SetCounter(colorIndex)
+    {
+        this.counter = colorIndex;
+    }
+
+    SetColor()
+    {
+        let sz = g_canvas.cell_size;
+        let x_in = 5+ g_bot.x*sz; // Set x 5 pixel inside the sz-by-sz cell. otherwise it gets a different tint of the color
+        let y_in = 5+ g_bot.y*sz;
+        let cpix = { x:x_in, y:y_in }; // cell-interior pixel pos, new obj.
+        let cpix_hex = get_hex( cpix );
+        console.log(cpix_hex)
+        //chooses correct color to apply depending on current color of the cell
+        switch (cpix_hex) {
+            case Colors.Black: { g_bot.color = Colors.Blue; this.SetCounter(0); break; }
+            case Colors.Blue: { g_bot.color = Colors.Yellow; this.SetCounter(1); break; }
+            case Colors.Yellow: { g_bot.color = Colors.Red; this.SetCounter(2); break; }
+            case Colors.Red: { g_bot.color = Colors.Black; this.SetCounter(3); break; }
+            default: { g_bot.color = Colors.Blue; break; }
+        }
+    }
+
+    ColorMap(){
+        switch(this.counter)
+        {
+            case 0: 
+            this.direction = Actions.TurnLeft;
+            this.mode = Mode.Normal;
+            break;
+            case 1: 
+            this.direction = Actions.TurnRight;
+            this.mode = Mode.Normal;
+            break;
+            case 2: 
+            this.mode = Mode.CountDown;
+            break;
+            case 3: 
+            this.direction = Actions.TurnLeft;
+            this.mode = Mode.Normal;
+            break;
+        }
+    }
+}
+
   
   var g_canvas = { cell_size:10, wid:60, hgt:40 }; // JS Global var, w canvas size info.
   var g_frame_cnt = 0; // Setup a P5 display-frame counter, to do anim
@@ -53,58 +188,14 @@
       draw_grid( 10, 50, 'white', 'yellow' ); // Calls fcn in another (loaded) file.
   }
   // Here are some more simple multi-slot objects we use.
-  var g_bot = { dir:3, x:20, y:20, color: Colors.Black }; // Dir is 0..7 clock, w 0 up.
   var g_box = { t:1, hgt:47, l:1, wid:63 }; // Box in which bot can move.
-  
-  var firstRun = false;
-  
+    
+  const test = new FSM();
+
   function move_bot( ) // Move the bot in new direction & update color.
   {
-      let dir = (round (8 * random( ))) // Change direction at random; brownian motion. // Change direction at random; brownian motion.
-      let dx = 0;
-      let dy = 0;
-      // A simple way to change bot direction, with a "compass direction ptr".
-      switch (dir)
-      { // Convert dir to x,y deltas: dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
-          case 0 : {         dy = -1; break; } // up, N.
-          case 1 : { dx = 1; dy = -1; break; } // NE.
-          case 2 : { dx = 1; break; } // right, E.
-          case 3 : { dx = 1; dy = 1; break; } // SE ...
-          case 4 : {         dy = 1; break; }
-          case 5 : { dx = -1; dy = 1; break; }
-          case 6 : { dx = -1; break; }
-          case 7 : { dx = -1; dy = -1; break; }
-      }
-  
-      let x = (dx + g_bot.x + g_box.wid) % g_box.wid; // Move-x.  Ensure positive b4 mod.
-      let y = (dy + g_bot.y + g_box.hgt) % g_box.hgt; // Ditto y.
-  
-      if(!firstRun) //Always start with specific location
-      {
-          x = 30;
-          y = 20;
-          firstRun = true;
-      }
-  
-      g_bot.x = x; // Update bot x.
-      g_bot.y = y;
-      g_bot.dir = dir;
-      
-      let sz = g_canvas.cell_size;
-      let x_in = 5+ g_bot.x*sz; // Set x 5 pixel inside the sz-by-sz cell. otherwise it gets a different tint of the color
-      let y_in = 5+ g_bot.y*sz;
-      let cpix = { x:x_in, y:y_in }; // cell-interior pixel pos, new obj.
-      let cpix_hex = get_hex( cpix );
-      console.log(cpix_hex)
-      //chooses correct color to apply depending on current color of the cell
-      switch (cpix_hex) {
-          case Colors.Black: { g_bot.color = Colors.Blue; break; }
-          case Colors.Blue: { g_bot.color = Colors.Yellow; break; }
-          case Colors.Yellow: { g_bot.color = Colors.Red; break; }
-          case Colors.Red: { g_bot.color = Colors.Black; break; }
-          default: { g_bot.color = Colors.Black; break; }
-      }
-      // console.log( "bot x,y,dir,clr = " + x + "," + y + "," + dir + "," +  color );
+    test.MoveBot();
+    test.SetColor();
   }
   
   function get_rgb( cpix ) // Get RGB integer color at canvas pixel pos.
@@ -153,6 +244,8 @@
   function draw_bot( ) // Convert bot pos to grid pos & draw bot cell.
   {
       let sz = g_canvas.cell_size;
+      console.log("DRAW g_bot.x->" + g_bot.x + " g_bot.y->" + g_bot.y);
+
       let x_in = 5+ g_bot.x*sz; // Set x 5 pixel inside the sz-by-sz cell. otherwise it gets a different tint of the color
       let y_in = 5+ g_bot.y*sz;
       let cpix = { x:x_in, y:y_in }; // cell-interior pixel pos, new obj.
