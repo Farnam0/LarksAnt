@@ -62,70 +62,91 @@ class FSM{
 
     MoveBot()
     {
-       console.log( "Mode->" + this.mode + " Counter->" + this.counter + " Direction->" + this.direction + " Cardinal->" + g_bot.cDirection);
+    //    console.log( "Mode->" + this.mode + " Counter->" + this.counter + " Direction->" + this.direction + " Cardinal->" + g_bot.cDirection);
 
-        if(this.mode == Mode.Normal)
-            this.ColorMap();
-        else{
-            this.counter--;
-            if(this.counter < 0)
-                this.mode = Mode.Normal;
-        }
-        
         let dx = 0;
         let dy = 0;
         // A simple way to change bot direction, with a "compass direction ptr".
 
-        // switch(g_bot.cDirection)
-        // {
-        //     case Cardinal.North:  
-        //         switch (this.direction)
-        //         { // Convert dir to x,y deltas: dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
-        //             case Actions.TurnLeft : {  dx = -1; g_bot.cDirection = Cardinal.West; break; } // left, W //dx = -1 is up //dx = 1 is right // dy = 1 is up // dy = -1 is up
-        //             case Actions.TurnRight : { dx = 1; g_bot.cDirection = Cardinal.East; break; } // right, E.
-        //         }
-        //     break;
-        //     case Cardinal.South: 
-        //         switch (this.direction)
-        //         { // Convert dir to x,y deltas: dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
-        //             case Actions.TurnLeft : {  dx = 1; g_bot.cDirection = Cardinal.West; break; } // left, W
-        //             case Actions.TurnRight : { dx = -1; g_bot.cDirection = Cardinal.East; break; } // right, E.
-        //         }
-        //     break;
-        //     case Cardinal.West: 
-        //         switch (this.direction)
-        //         { // Convert dir to x,y deltas : dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
-        //             case Actions.TurnLeft : {  dy = -1; g_bot.cDirection = Cardinal.South; break; } // left, W
-        //             case Actions.TurnRight : { dy = 1; g_bot.cDirection = Cardinal.North; break; } // right, E.
-        //         }
-        //     break;
-        //     case Cardinal.East:
-        //         switch (this.direction)
-        //         { // Convert dir to x,y deltas: dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
-        //             case Actions.TurnLeft : {  dy = 1; g_bot.cDirection = Cardinal.North; break; } // left, W
-        //             case Actions.TurnRight : { dy = -1; g_bot.cDirection = Cardinal.South; break; } // right, E.
-        //         } 
-        //     break;
-        // }
+        if(this.mode == Mode.Normal) {
 
-        switch (this.direction)
-        { // Convert dir to x,y deltas: dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
-            case Actions.TurnLeft : {  dx = -1; g_bot.cDirection = Cardinal.West; break; } // left, W //dx = -1 is up //dx = 1 is right // dy = 1 is up // dy = -1 is up
-            case Actions.TurnRight : { dx = 1; g_bot.cDirection = Cardinal.East; break; } // right, E.
+            this.ColorMap();
+            
+            switch(g_bot.cDirection)
+            {
+                case Cardinal.North:  
+                    switch (this.direction)
+                    { // Convert dir to x,y deltas: dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
+                        case Actions.TurnLeft : {  dx = -1; g_bot.cDirection = Cardinal.West; console.log("FACING NORTH LEFT"); break; } // left, W WORKS
+                        case Actions.TurnRight : { dx = 1; g_bot.cDirection = Cardinal.East; console.log("FACING NORTH LEFT"); break; } // right, E.
+                    }
+                break;
+                case Cardinal.South: 
+                    switch (this.direction)
+                    { // Convert dir to x,y deltas: dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
+                        case Actions.TurnLeft : {  dx = 1; g_bot.cDirection = Cardinal.East; console.log("FACING SOUTH LEFT"); break; } // left, W WORKS
+                        case Actions.TurnRight : { dx = -1; g_bot.cDirection = Cardinal.West; console.log("FACING SOUTH LEFT"); break; } // right, E.
+                    }
+                break;
+                case Cardinal.West: 
+                    switch (this.direction)
+                    { // Convert dir to x,y deltas : dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
+                        
+                        case Actions.TurnLeft : {  dy = 1; g_bot.cDirection = Cardinal.South; console.log("FACING WEST LEFT"); break; } // left, W WORKS
+                        case Actions.TurnRight : { dy = -1; g_bot.cDirection = Cardinal.North; console.log("FACING WEST RIGHT"); break; } // right, E.
+                    }
+                break;
+                case Cardinal.East:
+                    switch (this.direction)
+                    { // Convert dir to x,y deltas: dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
+                        case Actions.TurnLeft : {  dy = -1; g_bot.cDirection = Cardinal.North; console.log("FACING EAST LEFT"); break; } // left, W WORKS
+                        case Actions.TurnRight : { dy = 1; g_bot.cDirection = Cardinal.South; console.log("FACING EAST RIGHT"); break; } // right, E.
+                    } 
+                break;
+            }
+        } else {
+            console.log("STRAIGHT")
+            console.log(this.counter)
+            if(this.counter <= 0) {
+                this.mode = Mode.Normal;
+            } else {
+                switch(g_bot.cDirection)
+                {
+                    case Cardinal.North:  
+                        dy = -1
+                    break;
+                    case Cardinal.South: 
+                        dy = 1
+                    break;
+                    case Cardinal.West: 
+                        dx = -1
+                    break;
+                    case Cardinal.East:
+                        dx = 1
+                    break;
+                }
+                this.counter--;
+            }
         }
+
+        // switch (this.direction)
+        // { // Convert dir to x,y deltas: dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
+        //     case Actions.TurnLeft : {  dx = -1; g_bot.cDirection = Cardinal.West; break; } // left, W //dx = -1 is up //dx = 1 is right // dy = 1 is up // dy = -1 is up
+        //     case Actions.TurnRight : { dx = 1; g_bot.cDirection = Cardinal.East; break; } // right, E.
+        // }
     
         let x = (dx + g_bot.x + g_box.wid) % g_box.wid; // Move-x.  Ensure positive b4 mod.
         let y = (dy + g_bot.y + g_box.hgt) % g_box.hgt; // Ditto y.
     
-        console.log("g_bot.x->" + g_bot.x + " g_bot.y->" + g_bot.y);
+        // console.log("g_bot.x->" + g_bot.x + " g_bot.y->" + g_bot.y);
 
         g_bot.x = x; // Update bot x.
         g_bot.y = y;
     
-        console.log("dx->" + dx + " dy->" + dy);
-        console.log("g_bot.x->" + g_bot.x + " g_bot.y->" + g_bot.y);
+    //     console.log("dx->" + dx + " dy->" + dy);
+    //     console.log("g_bot.x->" + g_bot.x + " g_bot.y->" + g_bot.y);
 
-       console.log( "Mode->" + this.mode + " Counter->" + this.counter + " Direction->" + this.direction + " Cardinal->" + g_bot.cDirection);
+    //    console.log( "Mode->" + this.mode + " Counter->" + this.counter + " Direction->" + this.direction + " Cardinal->" + g_bot.cDirection);
     }
 
     SetCounter(colorIndex)
@@ -140,13 +161,13 @@ class FSM{
         let y_in = 5+ g_bot.y*sz;
         let cpix = { x:x_in, y:y_in }; // cell-interior pixel pos, new obj.
         let cpix_hex = get_hex( cpix );
-        console.log(cpix_hex)
+        // console.log(cpix_hex)
         //chooses correct color to apply depending on current color of the cell
         switch (cpix_hex) {
-            case Colors.Black: { g_bot.color = Colors.Blue; this.SetCounter(0); break; }
-            case Colors.Blue: { g_bot.color = Colors.Yellow; this.SetCounter(1); break; }
-            case Colors.Yellow: { g_bot.color = Colors.Red; this.SetCounter(2); break; }
-            case Colors.Red: { g_bot.color = Colors.Black; this.SetCounter(3); break; }
+            case Colors.Black: { g_bot.color = Colors.Blue; this.SetCounter(0); console.log("Set Counter to 0"); break; }
+            case Colors.Blue: { g_bot.color = Colors.Yellow; this.SetCounter(1); console.log("Set Counter to 1"); break; }
+            case Colors.Yellow: { g_bot.color = Colors.Red; this.SetCounter(2); console.log("Set Counter to 2"); break; }
+            case Colors.Red: { g_bot.color = Colors.Black; this.SetCounter(3); console.log("Set Counter to 3"); break; }
             default: { g_bot.color = Colors.Blue; break; }
         }
     }
@@ -244,7 +265,7 @@ class FSM{
   function draw_bot( ) // Convert bot pos to grid pos & draw bot cell.
   {
       let sz = g_canvas.cell_size;
-      console.log("DRAW g_bot.x->" + g_bot.x + " g_bot.y->" + g_bot.y);
+    //   console.log("DRAW g_bot.x->" + g_bot.x + " g_bot.y->" + g_bot.y);
 
       let x_in = 5+ g_bot.x*sz; // Set x 5 pixel inside the sz-by-sz cell. otherwise it gets a different tint of the color
       let y_in = 5+ g_bot.y*sz;
