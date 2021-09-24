@@ -1,10 +1,10 @@
-CPSC-335 Project 1 - Larks Ant
+**CPSC-335 Project 1 - Larks Ant**
 
-Team Name: AntEaters
+**Team Name:** AntEaters
 
-Team Members: Farnam, Clem, Ramon
+**Team Members:** Farnam, Clem, Ramon
 
-Intro:
+**Intro:**
 
 This project is based on the Langton's Ant algortihm, where the TM ant is pllced on a grid aand
 whose "braain" read the color of the cell it is on and based on that the bot willl performe the 
@@ -12,13 +12,13 @@ color-indicated action (changed its “nose” direction based on the color of t
 on, Left for Black and Right for White), it then increments the color of the cell and then 
 moves to the neighboring cell, following its "nose". 
 
-Changes made to the algorithm:
+**Changes made to the algorithm:**
 
 We extended the ant to a "Larks" ant by adding a mode whereby the LLLarks ant will sometimes ignore
 the color changes but instead continue in a straight lline for sequence of cell moves, which is done
 by maintaining some state, a countdown. (Larks, or LRCS, means Left-Right-Countdown-Straight.)
 
-How we achieved this:
+**How we achieved this:**
 
 First, as usual our K-color sequence is indexed color[0]..color[K-1].
 Second, each color (equivalently, each color index) can map to one of 3 actions: Turn Left, Turn Right, and
@@ -37,7 +37,7 @@ Else if FSM is in Countdown Mode then // we'll go straight, no change in directi
 4. Increment cell's color modulo the number of colors // ie, with wraparound
 5. Move to neighbor cell // in nose direction
 
-Contents: 
+**Contents: **
 
 -Folder which includes the assets used includes: draw-stuff.js, styles.css
 
@@ -52,7 +52,7 @@ Contents:
   
   -README.md which has description and requirements for the project
 
-External Requirements:
+**External Requirements:**
 
 There are no external requiremnts and any browser should support this project.
 
@@ -60,12 +60,12 @@ Setup and Installation:
 
 Simply extract the files from the zip into one folder and run index.html
 
-Features:
+**Features:**
 
 All features of the modified algortihm is done, refer to "How we achieved this" to 
 see more about the features we've implemented
 
-Bugs: 
+**Bugs: **
 
 If the bot reaches the border an overflow off the border happens.
 Let us know if there are any other bugs and we will assess them. 
