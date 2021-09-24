@@ -194,8 +194,8 @@ var g_frame_cnt = 0; // Setup a P5 display-frame counter, to do anim
 var g_frame_mod = 24; // Update ever 'mod' frames.
 var g_stop = 0; // Go by default.
 var bot_steps = 0; // counter for number of steps
-var fast_mode = true; // true to greatly speed up the animation 
-var max_2000 = true; // should the bot only go to 2000 steps.
+var fast_mode = false; // true to greatly speed up the animation 
+var max_2000 = false; // should the bot only go to 2000 steps.
   
 // Code from js-p5-example by Charles Siska
 function setup() // P5 Setup Fcn, must be called for Anim to work.
