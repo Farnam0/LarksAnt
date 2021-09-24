@@ -37,7 +37,7 @@ Else if FSM is in Countdown Mode then // we'll go straight, no change in directi
 4. Increment cell's color modulo the number of colors // ie, with wraparound
 5. Move to neighbor cell // in nose direction
 
-**Contents: **
+**Contents:**
 
 -Folder which includes the assets used includes: draw-stuff.js, styles.css
 
@@ -56,7 +56,7 @@ Else if FSM is in Countdown Mode then // we'll go straight, no change in directi
 
 There are no external requiremnts and any browser should support this project.
 
-Setup and Installation:
+**Setup and Installation:**
 
 Simply extract the files from the zip into one folder and run index.html
 
@@ -65,7 +65,7 @@ Simply extract the files from the zip into one folder and run index.html
 All features of the modified algortihm is done, refer to "How we achieved this" to 
 see more about the features we've implemented
 
-**Bugs: **
+**Bugs:**
 
 If the bot reaches the border an overflow off the border happens.
 Let us know if there are any other bugs and we will assess them. 
